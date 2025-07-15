@@ -15,15 +15,20 @@
       font-size: 5em;
       margin-bottom: 1em;
     }
-    canvas {
-      max-width: 600px;
-      margin: auto;
-    }
+canvas {
+  display: block;
+  margin: 0 auto;
+  max-width: 60vw;
+  width: 100%;
+  height: auto;
+}
   </style>
 </head>
 <body>
-  <div class="big-number" id="today-hours">--</div>
-  <canvas id="workChart"></canvas>
+    <div class="big-number" id="today-hours">--</div>
+
+    <canvas id="workChart"></canvas>
+
 
   <script>
     fetch('work_summary.json')
@@ -33,20 +38,23 @@
         const values = Object.values(data);
 
         // Display today's total work
-        document.getElementById("today-hours").innerText = values[6] + " hrs";
+        document.getElementById("today-hours").innerText = "Today: " + values[6] + " hrs";
 
         const ctx = document.getElementById('workChart').getContext('2d');
         new Chart(ctx, {
-          type: 'bar',
+          type: 'line',
           data: {
             labels: labels,
             datasets: [{
-              label: 'Deep Work Hours',
+              label: 'Deep Work Hours For the Past 7 days',
               data: values,
+              fill: true, 
+              backgroundColor: 'rgba(0, 123, 255, 0.2)',
               backgroundColor: '#007BFF'
             }]
           },
           options: {
+            resposive: true,
             scales: {
               y: {
                 beginAtZero: true,
