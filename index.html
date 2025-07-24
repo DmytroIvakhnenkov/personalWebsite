@@ -3,6 +3,8 @@
 <head>
   <title>Deep Work Tracker</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@1.4.0/dist/chartjs-plugin-annotation.min.js"></script>
+
   <style>
     body {
       font-family: sans-serif;
@@ -12,7 +14,7 @@
       color: #007BFF;
     }
     .big-number {
-      font-size: 5em;
+      font-size: 4em;
       margin-bottom: 1em;
     }
 canvas {
@@ -26,9 +28,8 @@ canvas {
 </head>
 <body>
     <div class="big-number" id="today-hours">--</div>
-
+    <div> Reap <i><b>DISPROPORTIONATE</b></i> rewards by learning fast, and producing fast and in quality! </div>
     <canvas id="workChart"></canvas>
-
 
   <script>
     fetch('work_summary.json')
@@ -49,11 +50,32 @@ canvas {
               label: 'Deep Work Hours For the Past 7 days',
               data: values,
               fill: true, 
-              backgroundColor: 'rgba(0, 123, 255, 0.2)'
+              backgroundColor: 'rgba(0, 123, 255, 0.2)',
+              borderColor: 'rgb(0, 123, 255)',
+              pointBackgroundColor: 'rgb(0, 123, 255)',
             }]
           },
           options: {
             resposive: true,
+            plugins: {
+            annotation: {
+              annotations: {
+                sixHourLine: {
+                  type: 'line',
+                  yMin: 6,
+                  yMax: 6,
+                  borderColor: 'green',
+                  borderWidth: 2,
+                  borderDash: [6, 6],
+                  label: {
+                    content: 'Success!',
+                    enabled: true,
+                    position: 'start'
+                  }
+                }
+              }
+            }
+          },
             scales: {
               y: {
                 beginAtZero: true,
