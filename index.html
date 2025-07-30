@@ -4,6 +4,7 @@
   <title>Deep Work Tracker</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@1.4.0/dist/chartjs-plugin-annotation.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
 
   <style>
     body {
@@ -15,7 +16,11 @@
     }
     .big-number {
       font-size: 4em;
-      margin-bottom: 1em;
+      margin-bottom: 0.1em;
+    }
+    .medium-number {
+      font-size: 2em;
+      margin-bottom: 0.5em;
     }
 canvas {
   display: block;
@@ -28,6 +33,7 @@ canvas {
 </head>
 <body>
     <div class="big-number" id="today-hours">--</div>
+    <div class="medium-number" id="week-average">--</div>
     <div> Reap <i><b>DISPROPORTIONATE</b></i> rewards by learning fast, and producing fast and in quality! </div>
     <canvas id="workChart"></canvas>
 
@@ -35,13 +41,24 @@ canvas {
     fetch('work_summary.json')
       .then(response => response.json())
       .then(data => {
-        const labels = Object.keys(data);
+        const labels = Object.keys(data).map(dateStr =>{
+          const date = new Date(dateStr);
+          const day = date.toLocaleDateString(undefined, {weekday: 'short'});
+          const shortDate = date.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+          return [day, shortDate];
+        });
         const values = Object.values(data);
 
         // Display today's total work
         document.getElementById("today-hours").innerText = "Today: " + values[6] + " hrs";
+        
+        //Display average for the past seven days
+        const average = values.reduce((sum, val) => sum + val, 0) / values.length
+        document.getElementById("week-average").innerText = "Week average: " + average.toFixed(2) + " hrs";
 
         const ctx = document.getElementById('workChart').getContext('2d');
+        Chart.register(ChartDataLabels);
+
         new Chart(ctx, {
           type: 'line',
           data: {
@@ -56,8 +73,22 @@ canvas {
             }]
           },
           options: {
-            resposive: true,
+            responsive: true,
             plugins: {
+              tooltip:{
+                enabled: false
+              },
+              datalabels:{
+                align: 'top',
+                anchor: 'end',
+                color: '#007BFF',
+                font: {
+                        weight: 'bold'
+                      },
+              formatter: function(value) {
+return value.toString(); // Show the actual value
+ }
+            },
             annotation: {
               annotations: {
                 sixHourLine: {
@@ -70,7 +101,7 @@ canvas {
                   label: {
                     content: 'Success!',
                     enabled: true,
-                    position: 'start'
+                    position: 'end'
                   }
                 }
               }
