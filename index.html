@@ -53,8 +53,8 @@ canvas {
         document.getElementById("today-hours").innerText = "Today: " + values[6] + " hrs";
         
         //Display average for the past seven days
-        const average = values.reduce((sum, val) => sum + val, 0) / values.length
-        document.getElementById("week-average").innerText = "Week average: " + average.toFixed(2) + " hrs";
+        const average = (values.reduce((sum, val) => sum + val, 0) - values[6]) / (values.length-1)
+        document.getElementById("week-average").innerText = "Weekly average (exluding today): " + average.toFixed(2) + " hrs";
 
         const ctx = document.getElementById('workChart').getContext('2d');
         Chart.register(ChartDataLabels);
