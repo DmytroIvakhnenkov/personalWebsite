@@ -177,16 +177,11 @@
       }
 
       function applyDarkModeByTaiwanTime() {
-        const nowUTC = new Date();
+        const localHour = new Date().getHours();
         // Get Taiwan time by adding 8 hours to UTC
-        const taiwanTime = new Date().toLocaleString("en-US", {
-          timeZone: "Asia/Taipei",
-        });
-        const hour = taiwanTime.getHours();
-        console.log("Taiwan time:", taiwanTime);
 
         // Define dark mode hours (7pm to 6am)
-        const isDark = hour >= 19 || hour < 6;
+        const isDark = localHour >= 19 || localHour < 6;
 
         if (isDark) {
           document.body.classList.add("dark-mode");
@@ -194,8 +189,8 @@
           document.body.classList.remove("dark-mode");
         }
       }
-      initChart();
       applyDarkModeByTaiwanTime();
+      initChart();
     </script>
   </body>
 </html>
