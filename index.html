@@ -85,10 +85,8 @@ canvas {
                 font: {
                         weight: 'bold'
                       },
-              formatter: function(value) {
-return value.toString(); // Show the actual value
- }
-            },
+              formatter: function(value) {return value.toString();}
+              },
             annotation: {
               annotations: {
                 sixHourLine: {
@@ -111,6 +109,23 @@ return value.toString(); // Show the actual value
               y: {
                 beginAtZero: true,
                 max: 8
+              }
+            },
+            canvas:{
+              onBeforeDrawing: (chart) => {
+                const ctx = chart.ctx;
+                const {top, left, width, height} = chart.chartArea;
+                const image = new Image();
+                image.src = 'sisyphus.webp';
+                
+                // Only draw the image once it's loaded
+                image.onload = () => {
+                  ctx.globalAlpha = 0.3;
+                  ctx.drawImage(image, left, top, width, height);
+                  ctx.globalAlpha = 1;
+                  chart.draw(); // Redraw the chart
+                };
+  
               }
             }
           }
