@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta charset="UTF-8" />
     <title>Deep Work Tracker</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@1.4.0/dist/chartjs-plugin-annotation.min.js"></script>
@@ -29,6 +30,30 @@
         width: 100%;
         height: auto;
       }
+      #projects-list {
+        text-align: left;
+        display: inline-block;
+        margin-top: 0.1em;
+        font-size: 1.1em;
+        color: #000000;
+      }
+
+      #projects-list li {
+        margin-bottom: 0.6em;
+      }
+
+      body.dark-mode {
+        background-color: #121212;
+        color: #90caf9; /* lighter blue for contrast */
+      }
+
+      body.dark-mode #projects-list {
+        color: #ddd;
+      }
+      body.dark-mode .big-number,
+      body.dark-mode .medium-number {
+        color: #90caf9;
+      }
     </style>
   </head>
   <body>
@@ -39,7 +64,17 @@
       producing fast and in quality!
     </div>
     <canvas id="workChart"></canvas>
-
+    <div>
+      <h2 style="margin-bottom: 0.1em">Current Projects</h2>
+      <ol id="projects-list">
+        <li>Verilog Agent for Chip IDE 🚀</li>
+        <li>Squat Classification App 🏋️‍♂️</li>
+        <li>PedometerAI 👟</li>
+        <li>LLM inference UI in Kotlin 🧠</li>
+        <li>Educational Accounting Tool 📚</li>
+        <li>AI girlfriend in Kotlin 💘</li>
+      </ol>
+    </div>
     <script>
       async function initChart() {
         // Load background image and wait until it’s ready
@@ -141,7 +176,26 @@
         });
       }
 
+      function applyDarkModeByTaiwanTime() {
+        const nowUTC = new Date();
+        // Get Taiwan time by adding 8 hours to UTC
+        const taiwanTime = new Date().toLocaleString("en-US", {
+          timeZone: "Asia/Taipei",
+        });
+        const hour = taiwanTime.getHours();
+        console.log("Taiwan time:", taiwanTime);
+
+        // Define dark mode hours (7pm to 6am)
+        const isDark = hour >= 19 || hour < 6;
+
+        if (isDark) {
+          document.body.classList.add("dark-mode");
+        } else {
+          document.body.classList.remove("dark-mode");
+        }
+      }
       initChart();
+      applyDarkModeByTaiwanTime();
     </script>
   </body>
 </html>
