@@ -76,6 +76,19 @@
       </ol>
     </div>
     <script>
+      function starCanvas() {
+        const canvas = document.createElement("canvas");
+        canvas.width = 24;
+        canvas.height = 24;
+        const ctx = canvas.getContext("2d");
+        ctx.font = "20px sans-serif";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText("⭐", canvas.width / 2, canvas.height / 2);
+        const img = new Image();
+        img.src = canvas.toDataURL();
+        return img;
+      }
       async function initChart() {
         // Load background image and wait until it’s ready
         const image = new Image();
@@ -136,6 +149,10 @@
                 backgroundColor: "rgba(0, 123, 255, 0.2)",
                 borderColor: "rgb(0, 123, 255)",
                 pointBackgroundColor: "rgb(0, 123, 255)",
+                pointRadius: values.map((v) => (v >= 6 ? 14 : 5)), // bigger radius for star
+                pointStyle: values.map((v) =>
+                  v >= 6 ? starCanvas() : "circle"
+                ),
               },
             ],
           },
