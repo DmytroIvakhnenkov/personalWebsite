@@ -1,0 +1,26 @@
+{
+  "2025-07-14_to_2025-07-20": {
+    "total_hours": 10.7,
+    "average_hours_per_day": 1.53
+  },
+  "2025-07-21_to_2025-07-27": {
+    "total_hours": 20.05,
+    "average_hours_per_day": 2.86
+  },
+  "2025-07-28_to_2025-08-03": {
+    "total_hours": 15.49,
+    "average_hours_per_day": 2.21
+  },
+  "2025-08-04_to_2025-08-10": {
+    "total_hours": 13.77,
+    "average_hours_per_day": 1.97
+  },
+  "2025-08-11_to_2025-08-17": {
+    "total_hours": 28.7,
+    "average_hours_per_day": 4.1
+  },
+  "2025-08-18_to_2025-08-24": {
+    "total_hours": 4.75,
+    "average_hours_per_day": 0.68
+  }
+}

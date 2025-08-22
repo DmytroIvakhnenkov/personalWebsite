@@ -75,6 +75,9 @@
         <li>AI girlfriend in Kotlin 💘</li>
       </ol>
     </div>
+    <div style="overflow-x: auto; max-width: 90vw; margin-top: 2rem">
+      <canvas id="weeklyBarChart" style="min-width: 800px"></canvas>
+    </div>
     <script>
       function starCanvas() {
         const canvas = document.createElement("canvas");
@@ -190,6 +193,59 @@
             },
           },
           plugins: [backgroundImagePlugin],
+        });
+
+        // After creating daily line chart and bar chart logic, add:
+        const weeklyResponse = await fetch("weekly_summary.json");
+        const weeklyData = await weeklyResponse.json();
+
+        // Extract labels (week ranges) and avg hours
+        const weekLabels = Object.keys(weeklyData);
+        const avgValues = Object.values(weeklyData).map(
+          (w) => w.average_hours_per_day
+        );
+
+        const weeklyCtx = document
+          .getElementById("weeklyBarChart")
+          .getContext("2d");
+        new Chart(weeklyCtx, {
+          type: "bar",
+          data: {
+            labels: weekLabels,
+            datasets: [
+              {
+                label: "Average Hours Per Day (Weekly)",
+                data: avgValues,
+                backgroundColor: "rgba(0, 123, 255, 0.6)",
+                borderColor: "rgb(0, 123, 255)",
+                borderWidth: 1,
+              },
+            ],
+          },
+          options: {
+            indexAxis: "y", // horizontal bars
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              datalabels: {
+                anchor: "end",
+                align: "right",
+                color: "#007BFF",
+                font: { weight: "bold" },
+                formatter: (value) => value.toFixed(2),
+              },
+            },
+            scales: {
+              x: {
+                beginAtZero: true,
+                max: 8, // max 8 hours
+                title: { display: true, text: "Average Hours per Day" },
+              },
+              y: {
+                title: { display: true, text: "Weeks" },
+              },
+            },
+          },
         });
       }
 
