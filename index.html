@@ -75,9 +75,7 @@
         <li>AI girlfriend in Kotlin 💘</li>
       </ol>
     </div>
-    <div style="overflow-x: auto; max-width: 90vw; margin-top: 2rem">
-      <canvas id="weeklyBarChart" style="min-width: 800px"></canvas>
-    </div>
+    <canvas id="weeklyBarChart"></canvas>
     <script>
       function starCanvas() {
         const canvas = document.createElement("canvas");
@@ -137,9 +135,9 @@
           },
         };
 
-        Chart.register(backgroundImagePlugin);
         Chart.register(ChartDataLabels);
 
+        // DAILY STATISTICS
         new Chart(ctx, {
           type: "line",
           data: {
@@ -200,16 +198,20 @@
         const weeklyData = await weeklyResponse.json();
 
         // Extract labels (week ranges) and avg hours
-        const weekLabels = Object.keys(weeklyData);
+        const weekLabels = Object.keys(weeklyData).map((l) =>
+          formatWeekLabel(l)
+        );
         const avgValues = Object.values(weeklyData).map(
           (w) => w.average_hours_per_day
         );
 
+        // WEEKLY AVERAGE
         const weeklyCtx = document
           .getElementById("weeklyBarChart")
           .getContext("2d");
+
         new Chart(weeklyCtx, {
-          type: "bar",
+          type: "bar", // Vertical bars by default
           data: {
             labels: weekLabels,
             datasets: [
@@ -223,13 +225,13 @@
             ],
           },
           options: {
-            indexAxis: "y", // horizontal bars
             responsive: true,
-            maintainAspectRatio: false,
+            maintainAspectRatio: true,
+            aspectRatio: 2,
             plugins: {
               datalabels: {
                 anchor: "end",
-                align: "right",
+                align: "top",
                 color: "#007BFF",
                 font: { weight: "bold" },
                 formatter: (value) => value.toFixed(2),
@@ -237,12 +239,18 @@
             },
             scales: {
               x: {
-                beginAtZero: true,
-                max: 8, // max 8 hours
-                title: { display: true, text: "Average Hours per Day" },
+                title: {
+                  display: true,
+                  text: "Weeks",
+                },
               },
               y: {
-                title: { display: true, text: "Weeks" },
+                beginAtZero: true,
+                max: 8, // max 8 hours
+                title: {
+                  display: true,
+                  text: "Average Hours per Day",
+                },
               },
             },
           },
@@ -261,6 +269,21 @@
         } else {
           document.body.classList.remove("dark-mode");
         }
+      }
+
+      function formatWeekLabel(label) {
+        // label = "2025-07-21_to_2025-07-27"
+        const startStr = label.split("_to_")[0]; // "2025-07-21"
+        const startDate = new Date(startStr);
+        const month = startDate.toLocaleString("default", { month: "long" }); // "July"
+        const day = startDate.getDate();
+
+        // Calculate week number in month
+        const weekNumber = Math.ceil(day / 7); // simple approximation
+        // Convert 1 -> 1st, 2 -> 2nd, etc.
+        const ordinal = ["th", "st", "nd", "rd"][weekNumber % 10] || "th";
+
+        return `${weekNumber}${ordinal} week of ${month}`;
       }
       applyDarkModeByTaiwanTime();
       initChart();
